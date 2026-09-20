@@ -324,6 +324,22 @@ def toc_html(page):
             '<p class="toc-head">On this page</p><ul>%s</ul></nav>' % items)
 
 
+def crumbs_html(page, pages):
+    """The visible counterpart of the BreadcrumbList already in the JSON-LD.
+
+    Marked search-skip so "Documentation" does not end up in every page's
+    indexed lead section, where it would match the word on all fifteen of them.
+    """
+    docs = next(p for p in pages if p.slug == 'index')
+    bits = ['<nav class="crumbs search-skip" aria-label="Breadcrumb">',
+            '<a href="%s">Documentation</a>' % page.rel(docs.url)]
+    if page.slug != 'index':
+        bits.append('<span class="sep" aria-hidden="true">/</span>')
+        bits.append('<span aria-current="page">%s</span>'
+                    % html.escape(page.nav_title))
+    return ''.join(bits) + '</nav>'
+
+
 def prev_next_html(page, pages):
     i = ORDER.index(page.slug)
     by_slug = {p.slug: p for p in pages}
@@ -343,7 +359,7 @@ def head_html(page, kind='article'):
     """Title, description, canonical, Open Graph, Twitter card, JSON-LD."""
     canon = BASE_URL + '/' + page.url
     full_title = (page.title if page.slug == 'home'
-                  else '%s — %s' % (page.title, SITE_NAME))
+                  else '%s - %s' % (page.title, SITE_NAME))
     ld = {
         '@context': 'https://schema.org',
         '@type': 'TechArticle' if kind == 'article' else 'SoftwareApplication',
@@ -398,7 +414,7 @@ def head_html(page, kind='article'):
         '<meta property="og:image" content="%s/assets/og.png">' % BASE_URL,
         '<meta property="og:image:width" content="1200">',
         '<meta property="og:image:height" content="630">',
-        '<meta property="og:image:alt" content="%s — %s">'
+        '<meta property="og:image:alt" content="%s - %s">'
         % (SITE_NAME, TAGLINE),
         '<meta name="twitter:card" content="summary_large_image">',
         '<meta name="twitter:title" content="%s">' % html.escape(full_title),
@@ -428,7 +444,7 @@ def build(out, base_url):
     BASE_URL = base_url.rstrip('/')
 
     pages = read_docs()
-    home = Page('home', '%s — %s' % (SITE_NAME, TAGLINE),
+    home = Page('home', '%s - %s' % (SITE_NAME, TAGLINE),
                 'Convert Assetto Corsa .kn5 cars and tracks to glTF 2.0 or GLB '
                 'from the command line. Keeps the full node hierarchy, resolves '
                 'liveries, and maps AC shader parameters onto PBR materials.',
@@ -460,6 +476,7 @@ def build(out, base_url):
             root=p.rel(''),
             assets=p.rel('assets'),
             nav=nav_html(p, pages, p.slug),
+            crumbs=crumbs_html(p, pages),
             toc=toc_html(p),
             body=body,
             prevnext=prev_next_html(p, pages),

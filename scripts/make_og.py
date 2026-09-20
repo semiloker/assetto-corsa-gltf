@@ -15,11 +15,11 @@ from PIL import Image, ImageDraw, ImageFont
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 W, H = 1200, 630
-BG = (14, 16, 19)
-INK = (232, 234, 237)
-SOFT = (150, 157, 166)
-ACCENT = (255, 106, 77)
-LINE = (35, 39, 45)
+# The same zinc the stylesheet uses, so the card and the site are one design.
+BG = (9, 9, 11)            # --background, dark
+INK = (250, 250, 250)      # --foreground, dark
+SOFT = (161, 161, 170)     # --muted-foreground
+LINE = (39, 39, 42)        # --border, dark
 
 
 def font(names, size):
@@ -45,15 +45,17 @@ def main():
     im = Image.new('RGB', (W, H), BG)
     d = ImageDraw.Draw(im)
 
-    # A hairline grid, faint enough to read as texture rather than as content.
+    # A hairline grid, faint enough to read as texture rather than as content,
+    # and a one-pixel border instead of a coloured bar: depth here comes from a
+    # hairline, the same as everywhere else on the site.
     for x in range(0, W, 40):
-        d.line([(x, 0), (x, H)], fill=(18, 21, 25))
+        d.line([(x, 0), (x, H)], fill=(16, 16, 19))
     for y in range(0, H, 40):
-        d.line([(0, y), (W, y)], fill=(18, 21, 25))
-    d.rectangle([0, 0, W - 1, 7], fill=ACCENT)
+        d.line([(0, y), (W, y)], fill=(16, 16, 19))
+    d.rectangle([0, 0, W - 1, H - 1], outline=LINE, width=1)
 
     pad = 80
-    d.text((pad, 96), 'assetto-corsa-gltf', font=font(MONO, 30), fill=ACCENT)
+    d.text((pad, 96), 'assetto-corsa-gltf', font=font(MONO, 30), fill=SOFT)
 
     big = font(SANS, 68)
     d.text((pad, 156), 'Assetto Corsa models,', font=big, fill=INK)
@@ -61,7 +63,7 @@ def main():
 
     sub = font(SANS_R, 30)
     d.text((pad, 344),
-           'Convert .kn5 cars and tracks to glTF or a single GLB —',
+           'Convert .kn5 cars and tracks to glTF or a single GLB -',
            font=sub, fill=SOFT)
     d.text((pad, 386),
            'node hierarchy, liveries and PBR materials intact.',

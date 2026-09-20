@@ -20,6 +20,11 @@
     <span>{sitename}</span>
   </a>
 
+  <nav class="top-links" aria-label="Site">
+    <a href="{root}docs/">Documentation</a>
+    <a href="{repo}" rel="noopener">GitHub</a>
+  </nav>
+
   <form class="search" role="search" autocomplete="off" onsubmit="return false">
     <label class="sr-only" for="q">Search the documentation</label>
     <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
@@ -34,15 +39,13 @@
     <div id="results" class="results" role="listbox" aria-label="Search results" hidden></div>
   </form>
 
-  <nav class="top-links" aria-label="Site">
-    <a href="{root}docs/">Docs</a>
-    <a href="{repo}" rel="noopener">GitHub</a>
+  <div class="tools">
     <button type="button" class="theme" aria-label="Switch colour theme" title="Switch colour theme">
-      <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
         <path d="M12 3a9 9 0 1 0 9 9 7 7 0 0 1-9-9z" fill="currentColor"/>
       </svg>
     </button>
-  </nav>
+  </div>
 </header>
 
 <main id="content">
@@ -52,7 +55,7 @@
   <h1>Assetto Corsa models, as glTF&nbsp;2.0</h1>
   <p class="lede">
     <strong>assetto-corsa-gltf</strong> reads the <code>.kn5</code> files Assetto Corsa
-    ships its cars and tracks in and writes <strong>glTF 2.0</strong> — a <code>.gltf</code>
+    ships its cars and tracks in and writes <strong>glTF 2.0</strong> - a <code>.gltf</code>
     with textures beside it, or a single self-contained <code>.glb</code>.
     The node hierarchy comes across one for one, liveries resolve to the paint the
     game would actually use, and the shader parameters become PBR materials.
@@ -69,7 +72,7 @@ kn5-to-gltf ks_mazda_mx5_nd/mazda_mx5_lod_a.kn5 out --skin 00_soul_red_metallic 
 <section class="strip" aria-label="At a glance">
   <div><b>219</b><span>cars in a stock install</span></div>
   <div><b>215</b><span>convert; 2 encrypted, 0 failures</span></div>
-  <div><b>1</b><span>dependency — Pillow</span></div>
+  <div><b>1</b><span>dependency - Pillow</span></div>
   <div><b>~7s</b><span>for a car, textures and all</span></div>
 </section>
 
@@ -79,21 +82,21 @@ kn5-to-gltf ks_mazda_mx5_nd/mazda_mx5_lod_a.kn5 out --skin 00_soul_red_metallic 
     <article>
       <h3>Cars and tracks</h3>
       <p>A car is one <code>.kn5</code>. A track is several, placed by its
-         <code>models_*.ini</code> — point at the ini and they arrive in one glTF,
+         <code>models_*.ini</code> - point at the ini and they arrive in one glTF,
          positioned. Magione converts to 2.38&nbsp;million triangles across 963 meshes.</p>
       <p><a href="{root}docs/cars/">Cars</a> · <a href="{root}docs/tracks/">Tracks</a></p>
     </article>
     <article>
       <h3>The hierarchy survives</h3>
       <p>A car carries around 250 nodes with no geometry on them: wheel centres,
-         suspension pickups, the steering column, door hinges — named and positioned.
+         suspension pickups, the steering column, door hinges - named and positioned.
          Flatten the tree and you throw away the useful part.</p>
       <p><a href="{root}docs/output/#the-node-hierarchy">How nodes map</a></p>
     </article>
     <article>
       <h3>Liveries, and the right paint</h3>
       <p>An Assetto Corsa livery lives outside the model, and on most Kunos road cars the
-         colour is not even in the diffuse — it is a flat detail map the shader multiplies
+         colour is not even in the diffuse - it is a flat detail map the shader multiplies
          over a shared grey sheet. That is why naive imports arrive white.</p>
       <p><a href="{root}docs/cars/#liveries-and-paint">Liveries and paint</a></p>
     </article>
@@ -130,7 +133,7 @@ kn5-to-gltf ks_mazda_mx5_nd/mazda_mx5_lod_a.kn5 out --skin 00_soul_red_metallic 
               reading 169 meshes, 168,283 triangles, 1.89 x 1.26 x 3.91 m.">
     <figcaption>
       <code>kn5-studio</code> converts the car, serves it to a local page and opens it.
-      Clicking a livery re-converts and reloads &mdash; on these cars the paint is a
+      Clicking a livery re-converts and reloads - on these cars the paint is a
       base-colour factor rather than a texture, so the colour genuinely changes the glTF.
       <span class="attr">Model: <code>ks_mazda_mx5_nd</code>, &copy; Kunos Simulazioni.
       Shown to illustrate the tool; no Assetto Corsa content is distributed with this
@@ -153,7 +156,7 @@ wrote  : out/mx5.glb</code></pre>
   <p>153 of those 323 nodes carry no geometry at all, and they are the reason to keep
      the tree. Twelve meshes were dropped: the runtime <code>_BLUR</code> wheels, the
      <code>_DAMAGE</code> shells, and the low-resolution half of the in-file cockpit and
-     steering-wheel LOD pairs — all things the game swaps at runtime and a static glTF
+     steering-wheel LOD pairs - all things the game swaps at runtime and a static glTF
      cannot.</p>
   <p><a href="{root}docs/cars/#lod-twins-and-runtime-variants">Why those are dropped</a></p>
 </section>
@@ -164,7 +167,7 @@ wrote  : out/mx5.glb</code></pre>
     <thead><tr><th>Input</th><th>What it is</th><th>Read</th></tr></thead>
     <tbody>
       <tr><td><code>.kn5</code></td><td>the model container, cars and tracks, versions 5 and 6</td><td>yes</td></tr>
-      <tr><td><code>skins/&lt;name&gt;/</code></td><td>liveries — DDS overriding the model's own textures</td><td>yes</td></tr>
+      <tr><td><code>skins/&lt;name&gt;/</code></td><td>liveries - DDS overriding the model's own textures</td><td>yes</td></tr>
       <tr><td><code>models_*.ini</code></td><td>track layout: which models, where</td><td>yes</td></tr>
       <tr><td><code>data/surfaces.ini</code></td><td>physics surfaces, friction and grip</td><td>yes, as a JSON sidecar</td></tr>
       <tr><td><code>data.acd</code></td><td>the encrypted physics archive</td><td>no</td></tr>
@@ -200,13 +203,13 @@ wrote  : out/mx5.glb</code></pre>
   <h2>Known issues and limits</h2>
   <ul class="limits">
     <li><b>CSP-encrypted models are refused.</b> The plain section of an encrypted
-        <code>.kn5</code> holds decoys — 1×1 textures and 6&nbsp;cm cubes — so converting one
+        <code>.kn5</code> holds decoys - 1×1 textures and 6&nbsp;cm cubes - so converting one
         would quietly produce a car with boxes for wheels.</li>
     <li><b>No animation, no skinning.</b> Skinned meshes come across as static geometry in
         bind pose; the pivots they move around are present as nodes.</li>
     <li><b>No physics data.</b> <code>data.acd</code> is encrypted and untouched. A track's
         surface table is the exception.</li>
-    <li><b>Track output is large.</b> No decimation and no Draco — Magione is a 165&nbsp;MB
+    <li><b>Track output is large.</b> No decimation and no Draco - Magione is a 165&nbsp;MB
         buffer. Run it through gltf-transform if you need it smaller.</li>
     <li><b>Materials are an approximation.</b> Assetto Corsa is a Blinn-Phong-era renderer;
         the conversions that exist are arithmetic, and the ones that do not are left out

@@ -266,7 +266,7 @@
 
   function renderEmpty() {
     panel.innerHTML =
-      '<div class="res-msg">Search the documentation &mdash; or start here:</div>' +
+      '<div class="res-msg">Search the documentation - or start here:</div>' +
       STARTERS.map(function (s) {
         return '<a class="res" role="option" aria-selected="false" href="' +
           root + s[0] + '"><span class="rt">' + esc(s[1]) +
@@ -280,7 +280,7 @@
     if (!results.length) {
       panel.innerHTML = '<div class="res-msg">No matches for <b>' +
         esc(query) + '</b>.<br>Try a shorter word, or a term from the file ' +
-        'format &mdash; <b>glb</b>, <b>skin</b>, <b>surfaces</b>, <b>lod</b>.</div>';
+        'format - <b>glb</b>, <b>skin</b>, <b>surfaces</b>, <b>lod</b>.</div>';
       current = [];
       show();
       return;

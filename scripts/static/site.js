@@ -48,8 +48,10 @@
         else seen.delete(en.target.id);
       });
       var first = targets.find(function (t) { return seen.has(t.id); });
-      links.forEach(function (a) { a.style.color = ''; });
-      if (first && byId[first.id]) byId[first.id].style.color = 'var(--accent)';
+      links.forEach(function (a) { a.removeAttribute('aria-current'); });
+      if (first && byId[first.id]) {
+        byId[first.id].setAttribute('aria-current', 'true');
+      }
     }, { rootMargin: '-80px 0px -70% 0px' });
     targets.forEach(function (t) { io.observe(t); });
   }
