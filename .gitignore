@@ -1,0 +1,25 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+.venv/
+venv/
+.pytest_cache/
+
+# Converted output and local scratch
+out/
+*.gltf
+*.glb
+*.bin
+*.surfaces.json
+
+# Generated website (built by scripts/build_site.py, deployed by CI)
+site/
+
+# Editor / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db

@@ -1,0 +1,50 @@
+[build-system]
+requires = ["setuptools>=64"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "assetto-corsa-gltf"
+version = "1.0.0"
+description = "Convert Assetto Corsa .kn5 cars and tracks to glTF 2.0 / GLB, with the node hierarchy and liveries intact"
+readme = "README.md"
+license = "MIT"
+license-files = ["LICENSE"]
+requires-python = ">=3.9"
+authors = [{ name = "semiloker" }]
+keywords = [
+    "assetto-corsa", "kn5", "gltf", "glb", "3d", "converter",
+    "sim-racing", "blender", "three-js", "mesh-conversion",
+]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Environment :: Console",
+    "Intended Audience :: Developers",
+    "Programming Language :: Python :: 3",
+    "Topic :: Multimedia :: Graphics :: 3D Modeling",
+    "Topic :: Utilities",
+]
+dependencies = ["Pillow>=9.0"]
+
+[project.urls]
+Homepage = "https://semiloker.github.io/assetto-corsa-gltf/"
+Documentation = "https://semiloker.github.io/assetto-corsa-gltf/docs/"
+Source = "https://github.com/semiloker/assetto-corsa-gltf"
+Issues = "https://github.com/semiloker/assetto-corsa-gltf/issues"
+Changelog = "https://github.com/semiloker/assetto-corsa-gltf/blob/main/CHANGELOG.md"
+
+[project.scripts]
+kn5-to-gltf = "acgltf.convert:main"
+kn5-studio = "acgltf.studio:main"
+kn5-survey = "acgltf.survey:main"
+
+[project.optional-dependencies]
+docs = ["Markdown>=3.4"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+acgltf = ["viewer/index.html", "viewer/three/LICENSE", "viewer/three/**/*.js"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
