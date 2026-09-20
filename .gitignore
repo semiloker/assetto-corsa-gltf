@@ -2,24 +2,33 @@
 __pycache__/
 *.py[cod]
 *.egg-info/
-build/
-dist/
 .venv/
 venv/
 .pytest_cache/
 
+# Anchored to the repository root. Unanchored, `build/` also matches
+# src/acgltf/viewer/three/build -- where the vendored three.js core lives -- and
+# a clone then gets a kn5-studio that serves a black page with nothing to say
+# why. tests/test_studio.py asserts that file is present and large, which is
+# how it was caught.
+/build/
+/dist/
+
 # Converted output and local scratch
-out/
+/out/
 *.gltf
 *.glb
 *.bin
 *.surfaces.json
 
-# Generated website (built by scripts/build_site.py, deployed by CI)
-site/
+# The generated website: built by scripts/build_site.py, published by CI
+/site/
 
 # Editor / OS
 .vscode/
 .idea/
 .DS_Store
 Thumbs.db
+
+# Nothing above may drop a vendored file. Last, so it wins.
+!src/acgltf/viewer/**
