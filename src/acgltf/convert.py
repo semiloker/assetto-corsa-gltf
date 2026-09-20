@@ -957,7 +957,8 @@ class Gltf:
             # unconditionally it renders every panel permanently caved in.
             nm = t.get('txNormal', '')
             n = None if 'damage' in nm.lower() else self._by_uri(self.tex_files.get(nm))
-            if n is None and self.gen_normals > 0.0 and not m['alpha_tested']                     and not m['alpha_blend']:
+            if (n is None and self.gen_normals > 0.0
+                    and not m['alpha_tested'] and not m['alpha_blend']):
                 # Only where the source has none, and never on a cutout — see
                 # gen_normal. A material that already ships a normal map keeps it.
                 dds = t.get('txDiffuse', '')

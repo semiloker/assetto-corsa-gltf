@@ -1,0 +1,7 @@
+[flake8]
+max-line-length = 100
+# kn5.py's reader is a column of one-line primitives (`v = ...; self.o += 4; return v`).
+# Spread over three lines each it is forty lines of noise around the same idea, so the
+# semicolons are the format, not an accident.
+extend-ignore = E702
+exclude = .git,__pycache__,build,dist,site,src/acgltf/viewer

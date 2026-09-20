@@ -313,8 +313,8 @@ def test_glb_is_one_self_contained_file():
 def test_glb_and_gltf_describe_the_same_model():
     tmp = tempfile.mkdtemp()
     a = read_gltf(run(car(tmp), os.path.join(tmp, 'a')))
-    b, _ = read_glb(os.path.join(run(car(tmp), os.path.join(tmp, 'b'), glb=True),
-                                'out.glb'))
+    b, _ = read_glb(
+        os.path.join(run(car(tmp), os.path.join(tmp, 'b'), glb=True), 'out.glb'))
     assert a['nodes'] == b['nodes'], 'the hierarchy must not depend on the container'
     assert a['meshes'] == b['meshes']
     assert len(a['materials']) == len(b['materials'])

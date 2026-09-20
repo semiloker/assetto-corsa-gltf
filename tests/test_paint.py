@@ -162,7 +162,8 @@ def test_paint_slots_put_the_bodywork_first():
     # this library does not name its paint at all.
     plain = [mat('EXT_Rim', 'a.dds'), mat('supra_body_xx', 'b.dds'),
              mat('mystery_01', 'c.dds')]
-    assert [g[1] for g in K.paint_slots(plain, {0: 9e9, 1: 10, 2: 20})]         == ['supra_body_xx', 'mystery_01', 'EXT_Rim']
+    assert ([g[1] for g in K.paint_slots(plain, {0: 9e9, 1: 10, 2: 20})]
+            == ['supra_body_xx', 'mystery_01', 'EXT_Rim'])
 
 
 def test_print_skins_format():
@@ -190,7 +191,7 @@ def test_print_skins_format():
 
     assert code == 0
     assert lines[0].startswith('#')
-    rows = [l.split(chr(9)) for l in lines if not l.startswith('#')]
+    rows = [ln.split(chr(9)) for ln in lines if not ln.startswith('#')]
     assert [r[1] for r in rows] == ['00_red', '00_red', 'leather_only'], rows
     assert rows[0][2] == 'CARPAINT' and rows[0][3] == '7E0100', rows[0]
     assert rows[2][3] == '-', rows[2]        # no swatch, still listed

@@ -1,8 +1,5 @@
 #!/usr/bin/env python3
-"""python tools/test_kn5_lod.py — asserts the LOD-twin rule keeps Left Rear."""
-import os
-import sys
-
+"""python tests/test_lod.py -- asserts the LOD-twin rule keeps Left Rear."""
 from acgltf.convert import lowres_twins
 
 # A real MX-5 ND slice: three LOD twins among nine corner parts.

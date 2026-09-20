@@ -354,8 +354,8 @@ def main():
     Handler.studio = studio
     srv = ThreadingHTTPServer(('127.0.0.1', a.port), Handler)
     url = 'http://127.0.0.1:%d/' % a.port
-    print('output : %s%s' % (outdir, '   (temporary - deleted on exit)' if tmp
-                              else '   (kept: --out)'))
+    print('output : %s%s' % (outdir, '   (temporary - deleted on exit)'
+                             if tmp else '   (kept: --out)'))
     print('serving: %s   (Ctrl-C to stop)' % url)
     if not a.no_open:
         threading.Timer(0.3, webbrowser.open, (url,)).start()
