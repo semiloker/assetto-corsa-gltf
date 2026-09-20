@@ -8,10 +8,10 @@ centres, suspension pickups, steering column and door hinges, already positioned
 and a track's mesh names carry its physics surfaces. A converter that flattens
 the tree throws that away and leaves a lump of triangles.
 
-    # a car — one kn5
+    # a car â€” one kn5
     kn5-to-gltf <car.kn5> <outdir> [--name NAME] [--skin NAME]
 
-    # a track — several kn5 placed by a models_*.ini
+    # a track â€” several kn5 placed by a models_*.ini
     kn5-to-gltf --models <models_east.ini> <outdir> --name mulholland
                                 [--surfaces <data/surfaces.ini>]
 
@@ -19,7 +19,7 @@ Refuses files carrying the CSP encryption trailer: on those the textures and
 several meshes in the plain section are decoys (1x1 PNGs and 6 cm cubes), so a
 "successful" conversion would silently produce a car with boxes for wheels.
 
-Axes. kn5 is +X left, +Z forward, right-handed with CCW winding — measured, not
+Axes. kn5 is +X left, +Z forward, right-handed with CCW winding â€” measured, not
 assumed: the signed volume of the closed body shells and all four tyres comes out
 positive. glTF is +X right, -Z forward, also right-handed CCW. The two differ by
 a half turn about Y, which has determinant +1, so it goes on the root node as a
@@ -49,7 +49,7 @@ IDENTITY = [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1]
 
 # Runtime VARIANTS: meshes AC swaps in and out, which a static glTF cannot.
 # Exported alongside the originals they do not read as extra detail, they read as
-# a broken model — the damage shells sit a fraction of a millimetre off the clean
+# a broken model â€” the damage shells sit a fraction of a millimetre off the clean
 # panels and z-fight with them, and the blurred wheels are opaque discs over the
 # spokes. Dropped by default, subtree and all.
 VARIANT_RE = re.compile(r'BLUR|DAMAGE', re.I)
@@ -78,7 +78,7 @@ def lowres_twins(names):
 def scrub(rows, fallback):
     """Replace non-finite vertex attributes in place; return how many.
 
-    Real kn5 files carry NaN — the Honda's dash-light meshes have NaN tangents
+    Real kn5 files carry NaN â€” the Honda's dash-light meshes have NaN tangents
     and three of its dummies have an all-NaN matrix. Left alone they reach the
     JSON, and Python writes a bare `NaN` token there, which is not valid JSON:
     the file parses in Python and is rejected by every glTF loader.
@@ -92,7 +92,7 @@ def scrub(rows, fallback):
 
 
 def perp(v):
-    """Any unit vector perpendicular to `v` — a stand-in for a lost tangent."""
+    """Any unit vector perpendicular to `v` â€” a stand-in for a lost tangent."""
     if not all(math.isfinite(c) for c in v):
         return [1.0, 0.0, 0.0]
     a = [1.0, 0.0, 0.0] if abs(v[0]) < 0.9 else [0.0, 1.0, 0.0]
@@ -215,14 +215,14 @@ def classify_surface(node_name, keys):
     """What a track mesh is to the physics, from its name.
 
     Returns (kind, detail):
-      ('visual',  None)  no leading digit — scenery, the solver never sees it
+      ('visual',  None)  no leading digit â€” scenery, the solver never sees it
       ('wall',    prefix) a barrier. WALL is not a surface and is deliberately
                           absent from surfaces.ini: it has no friction, it is
                           something you hit.
       ('surface', KEY)   matched a surfaces.ini key
       ('default', prefix) physics on, but the prefix names no key. AC falls back
                           to the track default for these, and there are a lot of
-                          them — Mulholland has 97 meshes prefixed DIRT and 15
+                          them â€” Mulholland has 97 meshes prefixed DIRT and 15
                           GRASS with neither key defined. Reported rather than
                           silently dropped, because a caller may well want to
                           give DIRT its own friction.
@@ -359,6 +359,7 @@ def skin_report(kn5_path):
     grey primer, occasionally the colour the artist happened to have loaded.
     """
     model = kn5.load(kn5_path, geometry=False)
+    fold_texture_case(model)
     out = {'car': os.path.splitext(os.path.basename(kn5_path))[0],
            'encrypted': bool(model.encrypted), 'skins': []}
     if model.encrypted:
@@ -374,8 +375,9 @@ def skin_report(kn5_path):
     painted = paint_slots(model.materials, tris)
 
     root = os.path.join(os.path.dirname(os.path.abspath(kn5_path)), 'skins')
-    names = sorted(d for d in os.listdir(root)
-                   if os.path.isdir(os.path.join(root, d)))         if os.path.isdir(root) else []
+    names = (sorted(d for d in os.listdir(root)
+                    if os.path.isdir(os.path.join(root, d)))
+             if os.path.isdir(root) else [])
 
     own = {t[0]: t[2] for t in model.textures}
     # Keyed by the FILE the colour comes from, not by the material. Several
@@ -512,6 +514,44 @@ def print_materials(model, gltf_mats, mat_base, tex_files, swapped, keeps_alpha)
               % (f[0], f[1], f[2], pbr['roughnessFactor']))
 
 
+def fold_texture_case(model):
+    """Collapse texture entries that differ only in case; point the materials at
+    the spelling that survives. Returns how many entries were folded away.
+
+    Assetto Corsa is a Windows game and matches texture names case-insensitively,
+    so a car can carry `INT_DEcals.dds` in its texture table, ask a material for
+    `INT_Decals.dds`, and render fine. ks_mazda_mx5_nd does exactly that, and it
+    is not the only one -- sloppy case costs a modder nothing because nothing
+    ever tells them.
+
+    Written out literally it costs the IMPORT everything: the glTF names an image
+    that exists on disk only under a different capitalisation. On Windows it
+    still loads, by accident, which is why this went unnoticed; on Linux, on
+    macOS, and in any browser fetching from a case-sensitive server the material
+    arrives untextured. Two entries can also collide into one file on a
+    case-insensitive disk, so one of them was being silently overwritten by the
+    other.
+
+    The surviving entry is the one with the LARGEST blob. The two are the same
+    texture as far as the game is concerned, and the bigger one is never the
+    1x1 placeholder.
+    """
+    keep = {}
+    for i, (name, _active, data) in enumerate(model.textures):
+        k = name.lower()
+        if k not in keep or len(data) > len(model.textures[keep[k]][2]):
+            keep[k] = i
+    folded = len(model.textures) - len(keep)
+    canon = {k: model.textures[i][0] for k, i in keep.items()}
+    model.textures = [model.textures[i] for i in sorted(keep.values())]
+    for m in model.materials:
+        for slot, want in list(m['textures'].items()):
+            have = canon.get(want.lower())
+            if have is not None and have != want:
+                m['textures'][slot] = have
+    return folded
+
+
 def apply_skin(model, skin):
     """Overwrite kn5 texture blobs with the same-named files from `skin`.
 
@@ -554,7 +594,7 @@ def save_textures(model, outdir, used, written, keeps_alpha=frozenset(),
       opaque material, so nothing in the game ever noticed that the Lancer's
       carpaint_evo, seatsao, dashao and nine others decode to a completely
       transparent image. A PBR renderer samples it, and the car arrived with no
-      paint and no interior — the texture was there, and invisible.
+      paint and no interior â€” the texture was there, and invisible.
 
     `written` is shared across the models of a track, so a texture used by five
     of its kn5 is decoded once. `force` re-decodes anyway, which is what makes
@@ -681,7 +721,7 @@ def bake_roughness(model, outdir, cache, dds, spec_exp):
     `exp * s` and running the same exponent->roughness conversion is the same
     arithmetic already used for the constant case. `spec_exp` arrives with the
     material's scalar ksSpecular already folded in, so this applies the per-pixel
-    part on top of it — AC multiplies the two as well. At s = 1 it reproduces the
+    part on top of it â€” AC multiplies the two as well. At s = 1 it reproduces the
     constant exactly, so nothing that was right becomes wrong; below that the
     trim and rubber go matte, which is the flatness you can see.
     """
@@ -718,7 +758,7 @@ def gen_normal(blob, outdir, cache, dds, strength, cap=1024):
 
     WHY THIS EXISTS. Mulholland has 136 materials and not one `txNormal`: 125 of
     them carry a diffuse and nothing else. The track is flat by construction, in
-    AC too — AC hides it with its own shading. Under a PBR renderer that flatness
+    AC too â€” AC hides it with its own shading. Under a PBR renderer that flatness
     is all you see, and no amount of tuning roughness puts it back.
 
     WHAT IT IS. Luminance read as height, Sobel for the slope, (-dh/du, dh/dv, 1)
@@ -727,8 +767,8 @@ def gen_normal(blob, outdir, cache, dds, strength, cap=1024):
     operations and makes a 4096-square texture a second rather than a minute.
 
     WHAT IT IS NOT. It is an inference from colour, not a measurement of shape.
-    It is right where the albedo IS the surface — asphalt, gravel, brick, bark,
-    grass — and wrong wherever the albedo is PAINT: a white lane line becomes a
+    It is right where the albedo IS the surface â€” asphalt, gravel, brick, bark,
+    grass â€” and wrong wherever the albedo is PAINT: a white lane line becomes a
     raised kerb, a logo becomes embossing. That is what `strength` is for, and
     why alpha-masked cutouts are skipped entirely: embossing the border of a leaf
     card puts relief on empty space.
@@ -759,7 +799,7 @@ def gen_normal(blob, outdir, cache, dds, strength, cap=1024):
 
     # Sobel, pre-negated on X so the output IS the normal channel rather than the
     # gradient. glTF normal maps are OpenGL convention (+Y up) and glTF's V grows
-    # downward, which is the same direction the kernel differences in — so Y
+    # downward, which is the same direction the kernel differences in â€” so Y
     # needs no flip and X does.
     scale = max(4.0 / max(strength, 0.01), 0.2)
     nx = g.filter(ImageFilter.Kernel((3, 3), [1, 0, -1, 2, 0, -2, 1, 0, -1],
@@ -787,7 +827,8 @@ class Gltf:
         self.gn_cache, self.gen_normals, self.n_generated = {}, 0.0, 0
         self.ext_used = set()
         self.stats = {'dummy': 0, 'mesh': 0, 'tris': 0, 'empty': 0,
-                      'skipped': 0, 'nan': 0, 'nanmat': 0}
+                      'skipped': 0, 'nan': 0, 'nanmat': 0,
+                      'folded': 0}
         self.mesh_names = []
         self.lowres = set()
 
@@ -806,7 +847,7 @@ class Gltf:
         AC is Blinn-Phong: a specular colour and an exponent. The exponent
         converts to a roughness properly; the specular COLOUR does not convert at
         all, so metallic stays 0 and painted metal comes out as a dielectric.
-        That is the honest mapping — inventing a metalness from the specular
+        That is the honest mapping â€” inventing a metalness from the specular
         intensity makes chrome out of every polished plastic.
 
         Returns the index this model's material 0 landed on: a track's kn5 each
@@ -819,7 +860,7 @@ class Gltf:
             exp = max(p.get('ksSpecularEXP', 20.0), 1.0)
             # ksSpecular is the INTENSITY, and ignoring it is why trees and grass
             # came out wet-looking: 56 of Mulholland's 61 materials set it to
-            # 0.000 — no specular at all in AC — and every one of them was being
+            # 0.000 â€” no specular at all in AC â€” and every one of them was being
             # handed a full dielectric highlight at roughness 0.4.
             #
             # It folds in the same way the txMaps R channel does, and for the
@@ -855,15 +896,15 @@ class Gltf:
                                 t.get('txMaps', ''), eff)
             if mr:
                 # A per-pixel roughness supersedes the constant, so the factor
-                # goes to 1 — glTF MULTIPLIES the two.
+                # goes to 1 â€” glTF MULTIPLIES the two.
                 pbr['metallicRoughnessTexture'] = {'index': self._by_uri(mr)}
                 pbr['roughnessFactor'] = 1.0
             mat = {'name': m['name'], 'pbrMetallicRoughness': pbr,
                    'doubleSided': False}
             # fresnelMaxLevel is AC's cap on how much a surface may reflect: the
             # Lancer's black trim and window glass set 0.2, its paint 0.6. glTF's
-            # dielectric Fresnel has no such knob — it runs 0.04 head-on to 1.0
-            # at the silhouette — and these materials carry a 16x16 near-black
+            # dielectric Fresnel has no such knob â€” it runs 0.04 head-on to 1.0
+            # at the silhouette â€” and these materials carry a 16x16 near-black
             # diffuse, so the reflection IS their appearance. Uncapped, a curved
             # moulding or a cage tube rendered as nothing but sky.
             #
@@ -912,12 +953,12 @@ class Gltf:
                 self.ext_used.add('KHR_materials_clearcoat')
             # txNormal is NOT always a normal map. On AC's damage shaders the
             # slot holds the DENT map, which the game blends in proportion to
-            # accumulated damage — zero on an undamaged car. Bound
+            # accumulated damage â€” zero on an undamaged car. Bound
             # unconditionally it renders every panel permanently caved in.
             nm = t.get('txNormal', '')
             n = None if 'damage' in nm.lower() else self._by_uri(self.tex_files.get(nm))
             if n is None and self.gen_normals > 0.0 and not m['alpha_tested']                     and not m['alpha_blend']:
-                # Only where the source has none, and never on a cutout — see
+                # Only where the source has none, and never on a cutout â€” see
                 # gen_normal. A material that already ships a normal map keeps it.
                 dds = t.get('txDiffuse', '')
                 blob = next((x[2] for x in model.textures if x[0] == dds), None)
@@ -935,7 +976,7 @@ class Gltf:
                 # ksAlphaRef is NOT a glTF cutoff, and taking it literally is
                 # what produced the grey rectangles: 14 of this track's
                 # materials set it to 0.0, and a MASK at 0 passes every fragment
-                # — the whole texture card renders opaque, fringe and all. The
+                # â€” the whole texture card renders opaque, fringe and all. The
                 # tree shader's 0.01 is barely better. Both come from AC's own
                 # coverage path, which glTF has no equivalent for, so anything
                 # below a usable threshold falls back to glTF's default 0.5.
@@ -1001,7 +1042,7 @@ def model_matrix(pos, rot):
     """A track model's placement from models.ini, as a column-major glTF matrix.
 
     It goes UNDER the axis-flip root, so the position is written in AC's frame
-    and the root converts it with everything else — which is the point of doing
+    and the root converts it with everything else â€” which is the point of doing
     the flip once at the top instead of per vertex.
     """
     rx, ry, rz = (math.radians(a) for a in rot)
@@ -1042,6 +1083,7 @@ def convert(sources, outdir, name, flip_uv, keep_variants, surfaces_ini,
 
     for src in sources:
         model = kn5.load(src['file'])
+        G.stats['folded'] += fold_texture_case(model)
         if model.encrypted:
             sys.exit('refusing: %s carries the CSP kn5 encryption trailer.\n'
                      'Its textures and several meshes are decoys in the plain '
@@ -1134,6 +1176,9 @@ def convert(sources, outdir, name, flip_uv, keep_variants, surfaces_ini,
     if G.n_generated:
         print('normals: %d materials given a normal map derived from their '
               'albedo (strength %.2f)' % (G.n_generated, gen_normals))
+    if G.stats['folded']:
+        print('folded : %d texture names that differed only in case'
+              % G.stats['folded'])
     if G.stats['nan'] or G.stats['nanmat']:
         print('scrubbed: %d non-finite vertex attributes, %d NaN node matrices'
               % (G.stats['nan'], G.stats['nanmat']))
@@ -1186,13 +1231,13 @@ def main():
     ap.add_argument('--name', default=None, help='basename for .gltf/.bin')
     ap.add_argument('--flip-uv', action='store_true',
                     help='negate V. glTF and DirectX agree on a top-left UV '
-                         'origin, so this should NOT be needed — it is here '
+                         'origin, so this should NOT be needed â€” it is here '
                          'because a mod authored through Blender can arrive '
                          'either way, and the texture tells you in one look.')
     ap.add_argument('--gen-normals', nargs='?', type=float, const=1.0, default=0.0,
                     metavar='STRENGTH',
                     help='fabricate a normal map from the albedo for every '
-                         'material that has none — see gen_normal. Off by '
+                         'material that has none â€” see gen_normal. Off by '
                          'default; 1.0 is a sane starting point, 2 is strong. '
                          'It infers shape from colour, so it flatters asphalt '
                          'and brick and embosses painted lane lines.')
