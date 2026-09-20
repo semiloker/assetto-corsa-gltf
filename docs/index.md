@@ -1,12 +1,12 @@
 ---
-title: Assetto Corsa to glTF — documentation
+title: Assetto Corsa to glTF - documentation
 description: How to convert Assetto Corsa .kn5 cars and tracks to glTF 2.0 or GLB, keeping the node hierarchy, liveries and PBR materials.
 ---
 
 # Assetto Corsa → glTF documentation
 
 `assetto-corsa-gltf` reads the `.kn5` files Assetto Corsa ships its cars and
-tracks in and writes **glTF 2.0** — either a `.gltf` with a `.bin` and loose
+tracks in and writes **glTF 2.0** - either a `.gltf` with a `.bin` and loose
 PNG textures, or a single self-contained `.glb`.
 
 It is a command-line tool and a Python package. Pillow is its only dependency.
@@ -40,8 +40,8 @@ wrote  : out/mazda_mx5_lod_a.glb
 ## What it is for
 
 The point of the converter is the **node hierarchy**. A car's `.kn5` carries
-around 250 empty nodes alongside its meshes — wheel centres, suspension
-pickups, the steering column, door hinges — already named and already
+around 250 empty nodes alongside its meshes - wheel centres, suspension
+pickups, the steering column, door hinges - already named and already
 positioned. A track's mesh names carry its physics surfaces in a prefix.
 
 A converter that flattens the tree throws all of that away and leaves a lump of
@@ -51,10 +51,10 @@ name and hang something off.
 
 ## What it reads
 
-- **Cars** — one `.kn5`, plus the `skins/` folder beside it for liveries.
-- **Tracks** — several `.kn5` placed by a `models_*.ini`, plus an optional
+- **Cars** - one `.kn5`, plus the `skins/` folder beside it for liveries.
+- **Tracks** - several `.kn5` placed by a `models_*.ini`, plus an optional
   `data/surfaces.ini` for the physics surface table.
 
 See [Supported Assetto Corsa files](supported-files.md) for the details, and
-[Limitations](limitations.md) for what it deliberately refuses — chiefly
+[Limitations](limitations.md) for what it deliberately refuses - chiefly
 CSP-encrypted models, where the plain section of the file is decoys.

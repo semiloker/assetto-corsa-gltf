@@ -10,7 +10,7 @@ description: Install the Assetto Corsa to glTF converter with pip on Windows, Li
 - **Python 3.9 or newer.**
 - **[Pillow](https://pypi.org/project/Pillow/) 9 or newer**, installed
   automatically. It decodes the DDS textures inside a `.kn5` and writes the
-  PNGs. Nothing else is required — everything else the tool uses is in the
+  PNGs. Nothing else is required - everything else the tool uses is in the
   standard library.
 - An **Assetto Corsa installation** to read from. The tool never writes to it.
 
@@ -42,9 +42,9 @@ Three commands are installed:
 
 | Command | Does |
 |---|---|
-| `kn5-to-gltf` | the conversion — [reference](cli.md) |
-| `kn5-studio` | preview a car in a browser before importing it — [guide](preview.md) |
-| `kn5-survey` | scan a car library for modelled suspension — [guide](cli.md#kn5-survey) |
+| `kn5-to-gltf` | the conversion - [reference](cli.md) |
+| `kn5-studio` | preview a car in a browser before importing it - [guide](preview.md) |
+| `kn5-survey` | scan a car library for modelled suspension - [guide](cli.md#kn5-survey) |
 
 If your shell cannot find them, Python's script directory is not on your
 `PATH`. Either add it, or run the same code as modules:
@@ -68,7 +68,7 @@ install; only the Steam library root changes.
 
 Inside a car folder you are looking for the **top-detail** model, which is
 either `<car_id>.kn5` or `*_lod_a.kn5`. See
-[Which .kn5 is the car?](cars.md#which-kn5-is-the-car) — picking the wrong one
+[Which .kn5 is the car?](cars.md#which-kn5-is-the-car) - picking the wrong one
 is the most common way to get a result that looks like a broken converter.
 
 ## Upgrading and uninstalling

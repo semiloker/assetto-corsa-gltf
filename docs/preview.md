@@ -1,6 +1,6 @@
 ---
 title: Previewing with kn5-studio
-description: Look at an Assetto Corsa car in a browser before converting it, and click through its liveries — a local viewer built on three.js.
+description: Look at an Assetto Corsa car in a browser before converting it, and click through its liveries - a local viewer built on three.js.
 ---
 
 # Previewing with kn5-studio
@@ -36,7 +36,7 @@ $ kn5-studio "…/content/cars/ks_mazda_mx5_nd/mazda_mx5_lod_a.kn5"
 
 Hand it a `content/cars` folder and the page gets a car picker with a filter
 box. Nothing is converted until you choose one, and the right `.kn5` inside
-each folder is picked for you — see
+each folder is picked for you - see
 [Which .kn5 is the car?](cars.md#which-kn5-is-the-car).
 
 ```console
@@ -56,7 +56,7 @@ $ kn5-studio <car.kn5> --out build/import     # keep this one
 ## Why a browser
 
 The conversion has always lived in Python and the engine side has never needed
-to know about `.kn5`. A viewer built into a 3D application would invert that —
+to know about `.kn5`. A viewer built into a 3D application would invert that -
 an Assetto Corsa panel, a process launcher and a staging folder, to answer a
 question the application has no stake in.
 
@@ -67,8 +67,8 @@ tool, so there is no network dependency and no CDN moving underneath it.
 ## Why it re-converts when you click a colour
 
 On a Kunos road car the paint is not a texture the page could swap. It is a
-base-colour **factor** derived from the livery's flat detail map — see
-[where the colour comes from](cars.md#where-the-colour-actually-comes-from) —
+base-colour **factor** derived from the livery's flat detail map - see
+[where the colour comes from](cars.md#where-the-colour-actually-comes-from) -
 so changing colour changes the glTF, and the honest way to show the result is to
 produce it.
 
@@ -80,7 +80,7 @@ reused, and a livery overrides three maps out of fifty. Measured on
 
 The server binds `127.0.0.1` and serves exactly three things: the viewer page,
 the vendored three.js beside it, and the converted model. It does **not** serve
-the directory you started it from — `SimpleHTTPRequestHandler` maps URLs onto
+the directory you started it from - `SimpleHTTPRequestHandler` maps URLs onto
 the working directory by default, and a local web server handing out your source
 tree is a real hazard, so the path translation is replaced. Directory traversal
 in every shape tried is refused, and that is covered by
@@ -101,5 +101,5 @@ a socket, because the page has nowhere to show a 500.
 ## Third party
 
 three.js r160 is vendored under `src/acgltf/viewer/three/`, MIT licensed. It is
-a browser dependency of this one tool — nothing else in the package loads it,
+a browser dependency of this one tool - nothing else in the package loads it,
 and deleting the folder breaks only `kn5-studio`.

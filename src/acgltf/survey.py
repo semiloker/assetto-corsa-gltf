@@ -3,7 +3,7 @@
 
     kn5-survey "<...>/content/cars" [--top 25]
 
-Every AC car has SUSP_LF/RF/LR/RR dummies — they are how the game hangs the
+Every AC car has SUSP_LF/RF/LR/RR dummies - they are how the game hangs the
 wheels, and they exist even when nothing is drawn there. So their presence says
 nothing. What matters for seeing a suspension work is whether real geometry is
 parented under them: wishbones, dampers, pushrods, anti-roll bars. That is what
@@ -12,7 +12,7 @@ this counts.
 Two numbers, because either alone lies. Triangles alone favours one dense blob;
 part count alone favours four token cubes. A car worth looking at has both.
 
-Geometry is skipped while parsing (kn5.load(geometry=False)) — this only needs
+Geometry is skipped while parsing (kn5.load(geometry=False)) - this only needs
 the tree and the counts, and unpacking every vertex of 200 cars would take an
 hour to answer a question that takes seconds.
 """
@@ -30,7 +30,7 @@ SUSP_ROOT = re.compile(r'^SUSP_(LF|RF|LR|RR)$', re.I)
 # every car carries whether or not its arms are modelled.
 # The WHEEL CLUSTER. Most cars parent the rim, tyre, disc and caliper under
 # SUSP_* as well, and counting those made a car with four detailed wheels and no
-# arms outrank one with modelled wishbones — the first ranking this produced put
+# arms outrank one with modelled wishbones - the first ranking this produced put
 # an F1 car on top for having 9000-triangle rims. They are excluded so the score
 # measures the linkage and nothing else.
 WHEEL = re.compile(r'RIM|TYRE|TIRE|BLUR|DISC|DISK|CALIPER|BRAKE', re.I)

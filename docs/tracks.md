@@ -31,7 +31,7 @@ wrote  : out/magione.gltf
 ## Which ini?
 
 A track with one layout has `models.ini`. A track with several has one per
-layout — `ks_brands_hatch` ships `models_gp.ini` and `models_indy.ini` — and
+layout - `ks_brands_hatch` ships `models_gp.ini` and `models_indy.ini` - and
 each names a different set of `.kn5`. Convert the layout you want.
 
 Each `[MODEL_n]` section gives a `FILE`, a `POSITION` and a `ROTATION`, and all
@@ -50,7 +50,7 @@ triangles and a 165 MB `.bin`; a modern laser-scanned circuit is more.
 that size, and you cannot open a texture inside it. For track work the default
 `.gltf` + `.bin` + PNG layout is usually the one you want.
 
-`--gen-normals` is aimed squarely at tracks — see
+`--gen-normals` is aimed squarely at tracks - see
 [the flag's notes](cli.md#gen-normals). Over a hundred of Magione's
 materials carry a diffuse and nothing else.
 
@@ -101,12 +101,12 @@ solver sees this mesh, and the text after it names the surface.
   shortest-match rule. Magione defines `TARMACA` through `TARMACE`.
 - **Physics on, prefix names no key** → reported in `unkeyed` rather than
   dropped. Assetto Corsa falls back to the track default for these and there
-  are a lot of them — Magione has meshes prefixed `GRASS`, `ROAD` and `SAND`
+  are a lot of them - Magione has meshes prefixed `GRASS`, `ROAD` and `SAND`
   with none of those keys defined. A caller may well want to give `GRASS` its
   own friction, and cannot if the tool silently discards it.
 
 ## What is not exported
 
-The `.acd` data archive — the car and track physics data files — is not read at
+The `.acd` data archive - the car and track physics data files - is not read at
 all. Neither are AI lines, camera definitions, audio sources or the track map.
 See [Limitations](limitations.md).

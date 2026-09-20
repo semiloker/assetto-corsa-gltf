@@ -4,7 +4,7 @@ All notable changes to this project are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and the project uses
 [semantic versioning](https://semver.org/spec/v2.0.0.html).
 
-## [1.0.0] — 2026-09-20
+## [1.0.0] - 2026-09-20
 
 First release as a standalone project. The converter previously lived in the
 `tools/` directory of a game engine; it is now a package of its own with a
@@ -12,7 +12,7 @@ command-line interface, a test suite and documentation.
 
 ### Added
 
-- **`--glb`** — write one self-contained `.glb` instead of the
+- **`--glb`** - write one self-contained `.glb` instead of the
   `.gltf` / `.bin` / PNG set. The geometry and every texture end up in a single
   file; the loose files produced along the way are removed once their bytes are
   inside it.
@@ -32,7 +32,7 @@ command-line interface, a test suite and documentation.
 
 - **Texture names that differ only in case.** Assetto Corsa matches texture
   names case-insensitively, so a car can list `INT_DEcals.dds` and ask a
-  material for `INT_Decals.dds` and still render — `ks_mazda_mx5_nd` does.
+  material for `INT_Decals.dds` and still render - `ks_mazda_mx5_nd` does.
   Written out literally, the glTF named an image that existed on disk only under
   a different capitalisation: it loaded on Windows by accident and arrived
   untextured on Linux, on macOS and from any case-sensitive web server. Two such

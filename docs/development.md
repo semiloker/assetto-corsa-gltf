@@ -1,6 +1,6 @@
 ---
 title: Development
-description: Work on the Assetto Corsa glTF converter — repository layout, running the tests, building the documentation site, and how to contribute.
+description: Work on the Assetto Corsa glTF converter - repository layout, running the tests, building the documentation site, and how to contribute.
 ---
 
 # Development
@@ -19,14 +19,14 @@ own `.kn5`.
 
 ```
 src/acgltf/
-  kn5.py          the container reader — node tree, geometry, materials, textures
+  kn5.py          the container reader - node tree, geometry, materials, textures
   convert.py      the converter, the CLI, and the glTF/GLB writer
   studio.py       the local preview server
   survey.py       the suspension-geometry scan
   viewer/         the preview page, with three.js r160 vendored beside it
 tests/            four suites, no framework required
 docs/             the Markdown these pages are built from
-scripts/          build_site.py — Markdown + templates → the website
+scripts/          build_site.py - Markdown + templates → the website
 site/             generated; not committed
 ```
 
@@ -42,7 +42,7 @@ needs a framework, a fixture or a network.
 | Suite | Pins |
 |---|---|
 | `tests/test_convert.py` | the whole pipeline: hierarchy, axes, geometry round-trip, NaN scrubbing, case folding, GLB structure |
-| `tests/test_lod.py` | the LOD-twin rule — specifically that `_LR` stays Left Rear |
+| `tests/test_lod.py` | the LOD-twin rule - specifically that `_LR` stays Left Rear |
 | `tests/test_paint.py` | where a car's paint comes from: skin override, flat-detail tint, paint-slot ordering |
 | `tests/test_studio.py` | the preview server's routes, its JSON error path, and that it refuses directory traversal |
 

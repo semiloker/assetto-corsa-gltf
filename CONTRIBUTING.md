@@ -36,7 +36,7 @@ because one specific car or track broke a simpler rule, and the comments say
 which. So please include:
 
 - the exact command you ran and everything it printed;
-- the car or track — its folder name, whether it is stock or a mod, and where it
+- the car or track - its folder name, whether it is stock or a mod, and where it
   came from;
 - what you expected and what you got, ideally with a screenshot.
 
@@ -53,7 +53,7 @@ and AC's shader never samples alpha on an opaque material"* is reviewable.
 fixes one car and breaks forty.
 
 **Leave a test behind** for anything with a branch in it. The suites are plain
-`assert`s in plain functions — adding one is adding a function, and there is no
+`assert`s in plain functions - adding one is adding a function, and there is no
 framework to learn. If the behaviour needs a car to demonstrate, build one with
 `make_kn5` in `tests/test_convert.py` rather than checking a real one in.
 
@@ -78,7 +78,7 @@ co-authored it.
 
 `docs/*.md` builds the website. Add a page by writing the file with `title` and
 `description` front matter, then listing it in `NAV` in
-`scripts/build_site.py` — the build fails if you do one without the other, and
+`scripts/build_site.py` - the build fails if you do one without the other, and
 fails again if any internal link or anchor does not resolve.
 
 ## Scope

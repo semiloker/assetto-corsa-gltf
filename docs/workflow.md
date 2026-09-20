@@ -1,6 +1,6 @@
 ---
 title: Blender, three.js and Unity
-description: Open a converted Assetto Corsa car or track in Blender, three.js, Unity or Godot — scale, axes, materials and what survives each importer.
+description: Open a converted Assetto Corsa car or track in Blender, three.js, Unity or Godot - scale, axes, materials and what survives each importer.
 ---
 
 # Opening the result
@@ -14,7 +14,7 @@ before you import.
 - **Units are metres.** Assetto Corsa models in metres and so does glTF, so a
   car arrives roughly 4 m long and a track kilometres across, with no scaling
   step.
-- **Up is +Y, forward is −Z** — glTF's convention. The half-turn that gets there
+- **Up is +Y, forward is −Z** - glTF's convention. The half-turn that gets there
   from Assetto Corsa's axes sits on the root node; see
   [Coordinate axes](output.md#coordinate-axes).
 - **Empty nodes are the point.** Do not let an importer discard them. They are
@@ -69,7 +69,7 @@ Unity has no built-in glTF importer. Use
 keep the hierarchy.
 
 Unity is left-handed and Y-up, so the importer mirrors an axis on the way in.
-That is the importer's business and it handles winding accordingly — but if you
+That is the importer's business and it handles winding accordingly - but if you
 find the car inside out, that is the place to look, not the converter.
 
 ## Godot
@@ -89,4 +89,4 @@ application's importer log.
 
 Converting a car does not make it yours. Assetto Corsa's stock content is
 Kunos Simulazioni's, and mod content belongs to whoever made it. This tool is
-for working with content you already have — [see the FAQ](faq.md#can-i-publish-a-converted-car).
+for working with content you already have - [see the FAQ](faq.md#can-i-publish-a-converted-car).

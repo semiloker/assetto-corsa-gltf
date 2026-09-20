@@ -1,6 +1,6 @@
 ---
 title: FAQ
-description: Frequently asked questions about converting Assetto Corsa .kn5 models to glTF and GLB — formats, encryption, licensing, Blender, tracks and physics data.
+description: Frequently asked questions about converting Assetto Corsa .kn5 models to glTF and GLB - formats, encryption, licensing, Blender, tracks and physics data.
 ---
 
 # FAQ
@@ -13,7 +13,7 @@ See [cars](cars.md) and [tracks](tracks.md).
 
 ## Can it write GLB?
 
-Yes — pass [`--glb`](cli.md#glb). You get one self-contained file with the
+Yes - pass [`--glb`](cli.md#glb). You get one self-contained file with the
 geometry and every texture inside it. Without the flag you get `.gltf`, `.bin`
 and loose PNGs, which is what you want if you plan to edit textures.
 
@@ -27,7 +27,7 @@ which is a different project with a different risk profile.
 
 Because the livery lives outside the model and the textures inside the `.kn5`
 are the export-time template. Use `--skin`. This is the single most common
-question — [the long answer](cars.md#liveries-and-paint).
+question - [the long answer](cars.md#liveries-and-paint).
 
 ## Why won't it convert this car?
 
@@ -42,20 +42,20 @@ No, and it will not. See above.
 
 ## Do I need Assetto Corsa installed?
 
-To convert, you need the content — which normally means an install. To run the
+To convert, you need the content - which normally means an install. To run the
 test suite or work on the tool, no: the tests write their own `.kn5`.
 
 ## Does it need Blender?
 
 No. It is a standalone command-line tool; Pillow is its only dependency.
-Blender is one of the things you can open the result *in* — see
+Blender is one of the things you can open the result *in* - see
 [the workflow guide](workflow.md).
 
 ## Does it export physics, tyres or setups?
 
 No. `data.acd` is Assetto Corsa's encrypted physics archive and is not read at
-all. The one physics-adjacent thing exported is a track's **surface map** —
-which mesh is tarmac, kerb or wall, with the friction values — as
+all. The one physics-adjacent thing exported is a track's **surface map** -
+which mesh is tarmac, kerb or wall, with the friction values - as
 [a JSON sidecar](tracks.md#the-surfaces-sidecar).
 
 ## Does it export animations, doors or wipers?
@@ -66,7 +66,7 @@ geometry. [Limitations](limitations.md#no-skinning-and-no-animation).
 ## What happens to the wheel and suspension nodes?
 
 They survive, named and positioned. That is the main reason to use this rather
-than a converter that flattens the tree — a car brings around 250 nodes with no
+than a converter that flattens the tree - a car brings around 250 nodes with no
 geometry on them, and they are the useful part.
 [More](output.md#the-node-hierarchy).
 
@@ -95,7 +95,7 @@ to whoever made it; converting a file does not change who owns it. Use this for
 content you already have, for your own projects, and check with the author
 before redistributing anything.
 
-This repository ships no Assetto Corsa content for exactly that reason — the
+This repository ships no Assetto Corsa content for exactly that reason - the
 tests build their own model.
 
 ## How fast is it?

@@ -1,6 +1,6 @@
 ---
 title: Converting cars
-description: Convert an Assetto Corsa car .kn5 to glTF or GLB — picking the right model file, liveries and paint, LOD twins, damage and blur variants.
+description: Convert an Assetto Corsa car .kn5 to glTF or GLB - picking the right model file, liveries and paint, LOD twins, damage and blur variants.
 ---
 
 # Converting cars
@@ -18,12 +18,12 @@ converter rather than as the wrong input.
 
 Three shapes, in this order:
 
-1. **`<car_id>.kn5`** — the older Kunos layout, and most mods.
-2. **`*_lod_a.kn5`** — the current one, and the trap. Assetto Corsa's *top*
+1. **`<car_id>.kn5`** - the older Kunos layout, and most mods.
+2. **`*_lod_a.kn5`** - the current one, and the trap. Assetto Corsa's *top*
    LOD is `lod_A`, so a rule that skips everything with `_lod_` in the name
    skips the actual car. On `ks_mazda_mx5_nd` there is no file named after the
    folder at all; it is `mazda_mx5_lod_a.kn5`.
-3. **`collider.kn5`** — never this. It is the physics collision hull: eight
+3. **`collider.kn5`** - never this. It is the physics collision hull: eight
    boxes.
 
 `ks_mazda_mx5_nd` in full:
@@ -43,9 +43,9 @@ folder.
 ## Liveries and paint
 
 A livery in Assetto Corsa lives **outside** the model. The `.kn5` carries
-whichever skin happened to be loaded when it was exported — on
+whichever skin happened to be loaded when it was exported - on
 `ks_mazda_mx5_nd` that is the untouched grey template, averaging (174, 174, 174)
-— and at load time the game replaces it, by filename, with the contents of
+- and at load time the game replaces it, by filename, with the contents of
 `skins/<chosen>/`.
 
 So a converter that reads only the container gets the template every time, and
@@ -93,7 +93,7 @@ first line of a livery is the car's colour.
 
 It is not simply the biggest painted material, and that matters. On the MX-5
 the rims carry 33 024 triangles against the bodywork's 23 554, so sorting by
-size alone picks the *wheels* — whose grey comes out of the `.kn5` rather than
+size alone picks the *wheels* - whose grey comes out of the `.kn5` rather than
 the skin and is therefore identical for all seven liveries. Every colour in the
 picker would look the same. The name is consulted first, then size inside a
 band.
@@ -110,8 +110,8 @@ Corsa swaps them at runtime and a static glTF cannot:
 | `*_LR` **with** an `*_HR` twin | in-file LOD pairs | two dashboards and two steering wheels in the same place |
 
 The third needs the twin test, and it is the whole trick. `_LR` is **Left Rear**
-far more often than it is low-res — `WHEEL_LR`, `SUSP_LR`, `RIM_LR`, `DISC_LR`,
-`SPRING_LR`, `ROLL_BAR_LR` — so a rule matching the suffix alone would take a
+far more often than it is low-res - `WHEEL_LR`, `SUSP_LR`, `RIM_LR`, `DISC_LR`,
+`SPRING_LR`, `ROLL_BAR_LR` - so a rule matching the suffix alone would take a
 corner of the suspension off every car in the game. None of those has an `_HR`
 partner; every genuine LOD name does.
 
@@ -134,11 +134,11 @@ images : 61   materials: 55
 
 153 of those nodes carry no geometry at all. They are the useful part: wheel
 centres, suspension pickups, the steering column, door hinges, driver position
-— named and positioned by the people who built the car. See
+- named and positioned by the people who built the car. See
 [The glTF output](output.md#the-node-hierarchy).
 
 ## Next
 
-- [The glTF output](output.md) — materials, axes, textures
+- [The glTF output](output.md) - materials, axes, textures
 - [Blender, three.js and Unity](workflow.md)
-- [Troubleshooting](troubleshooting.md) — white, black, or inside out
+- [Troubleshooting](troubleshooting.md) - white, black, or inside out

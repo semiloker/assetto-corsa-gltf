@@ -24,7 +24,7 @@ glb    : 12.0 MB
 wrote  : out/mx5.glb
 ```
 
-`out/mx5.glb` is the whole car — geometry, hierarchy and all 61 textures.
+`out/mx5.glb` is the whole car - geometry, hierarchy and all 61 textures.
 Drag it into <https://gltf-viewer.donmccurdy.com/>, Blender, or three.js.
 
 Leave `--glb` off and you get `mx5.gltf`, `mx5.bin` and the PNGs beside them
@@ -35,7 +35,7 @@ instead, which is what you want if you intend to edit the textures. See
 
 An Assetto Corsa livery lives **outside** the model, in `skins/`. The textures
 inside the `.kn5` are whatever was loaded at export time, which on most Kunos
-road cars is the blank template — that is why a naive import arrives white.
+road cars is the blank template - that is why a naive import arrives white.
 
 List what the car ships:
 
@@ -101,7 +101,7 @@ values from the game. [More on tracks](tracks.md).
 
 ## Next
 
-- [Command-line reference](cli.md) — every flag
-- [The glTF output](output.md) — what the file actually contains
-- [Blender, three.js and Unity](workflow.md) — opening the result
-- [Troubleshooting](troubleshooting.md) — when it comes out white, black or inside out
+- [Command-line reference](cli.md) - every flag
+- [The glTF output](output.md) - what the file actually contains
+- [Blender, three.js and Unity](workflow.md) - opening the result
+- [Troubleshooting](troubleshooting.md) - when it comes out white, black or inside out

@@ -1,6 +1,6 @@
 ---
 title: Command-line reference
-description: Every flag of kn5-to-gltf, kn5-studio and kn5-survey — skins, variants, normal generation, surfaces, GLB output.
+description: Every flag of kn5-to-gltf, kn5-studio and kn5-survey - skins, variants, normal generation, surfaces, GLB output.
 ---
 
 # Command-line reference
@@ -22,7 +22,7 @@ kn5-to-gltf <car.kn5> --list-skins
 
 | Argument | Meaning |
 |---|---|
-| `kn5` | a single `.kn5` — a car. Omitted when `--models` is used. |
+| `kn5` | a single `.kn5` - a car. Omitted when `--models` is used. |
 | `outdir` | where to write. Created if missing. Optional only for `--list-skins`, which writes nothing. |
 
 ### Options
@@ -57,7 +57,7 @@ set. The geometry and every texture end up in a single file, which is what a
 viewer, a web page or an asset pipeline wants. The loose files produced along
 the way are removed once their bytes are inside it.
 
-Use the default (no `--glb`) when you want to edit or replace textures — in a
+Use the default (no `--glb`) when you want to edit or replace textures - in a
 `.glb` they are bytes inside a binary chunk, not files you can open.
 
 #### `--skin <NAME>` / `--skin none` { #skin }
@@ -66,7 +66,7 @@ Take textures from the car's `skins/<NAME>/` folder. Defaults to the first
 skin, which is what Assetto Corsa itself picks when nothing says otherwise.
 
 `--skin none` keeps the textures embedded in the `.kn5`. On most cars those are
-the export-time template — usually grey primer — which is
+the export-time template - usually grey primer - which is
 [why an import comes out white](troubleshooting.md#the-car-came-out-white).
 
 An unknown name is an error, and the message lists the skins the car has.
@@ -84,7 +84,7 @@ skin	00_soul_red_metallic	EXT_Carpaint	7E0100	23554	skin
 The columns are `skin`, livery name, material, `RRGGBB`, triangle count, and
 whether the colour came from the livery folder (`skin`) or from the `.kn5`
 itself (`kn5`). Materials are ordered so the **first line of each livery is its
-bodywork** — a tool that wants one swatch per livery takes exactly that line.
+bodywork** - a tool that wants one swatch per livery takes exactly that line.
 Anything else on stdout starts with `#`.
 
 A livery whose paint is a pattern rather than a flat colour is still listed,
@@ -114,7 +114,7 @@ Fabricate a tangent-space normal map from the albedo for every material that
 has none. Off by default; `--gen-normals` alone means 1.0, and 2 is strong.
 
 This exists for tracks. Magione and Mulholland have well over a hundred
-materials carrying a diffuse and nothing else — the surfaces are flat by
+materials carrying a diffuse and nothing else - the surfaces are flat by
 construction, and Assetto Corsa hides it with its own shading. Under a PBR
 renderer that flatness is all you see.
 
@@ -152,14 +152,14 @@ model round; clicking a livery re-converts and reloads. Ctrl-C stops it.
 
 | Option | Meaning |
 |---|---|
-| `CAR-OR-FOLDER` | one `.kn5`, or a whole `content/cars` folder — in which case the page gets a car picker and nothing is converted until you choose one. |
+| `CAR-OR-FOLDER` | one `.kn5`, or a whole `content/cars` folder - in which case the page gets a car picker and nothing is converted until you choose one. |
 | `--out DIR` | keep the converted glTF here. **Without it nothing is kept**: the conversion goes to a temporary folder deleted when the tool stops. |
 | `--name NAME` | basename for the `.gltf`. |
 | `--port N` | default `8731`. |
 | `--no-open` | do not launch a browser; just print the URL. |
 
 The server binds `127.0.0.1` and serves only the viewer and the converted
-model — never the directory you started it from. See
+model - never the directory you started it from. See
 [Previewing with kn5-studio](preview.md).
 
 ---
@@ -171,7 +171,7 @@ kn5-survey <content/cars> [--top N]
 ```
 
 Scan a car library and rank cars by how much **suspension geometry** is
-actually modelled — wishbones, dampers, pushrods, anti-roll bars — as opposed
+actually modelled - wishbones, dampers, pushrods, anti-roll bars - as opposed
 to merely present as empty nodes.
 
 Every Assetto Corsa car has `SUSP_LF/RF/LR/RR` dummies, because that is how the

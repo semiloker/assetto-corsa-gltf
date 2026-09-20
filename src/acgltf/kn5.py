@@ -1,4 +1,4 @@
-"""kn5 reader — the plain container Assetto Corsa ships models in.
+"""kn5 reader - the plain container Assetto Corsa ships models in.
 
 Reads the UNENCRYPTED sections only: node tree, geometry, material names. A file
 carrying the CSP `__AC_SHADERS_PATCH_KN5ENC_v1__` trailer keeps its textures and
@@ -59,7 +59,7 @@ class Node:
         self.children = []
         self.pos = self.nrm = self.uv = self.tan = self.idx = None
         self.material = -1
-        # Always present, even when the geometry itself was skipped — a survey
+        # Always present, even when the geometry itself was skipped - a survey
         # of a whole car folder wants the counts and nothing else.
         self.nverts = 0
         self.ntris = 0
@@ -68,7 +68,7 @@ class Node:
 class Model:
     def __init__(self):
         self.version = 0
-        self.textures = []      # (name, active, data) — data is a stub when encrypted
+        self.textures = []      # (name, active, data) - data is a stub when encrypted
         self.materials = []
         self.root = None
         self.encrypted = False
@@ -109,7 +109,7 @@ def load(path, geometry=True):
         name, shader = r.s(), r.s()
         blend = r.u8()
         tested = bool(r.u8())
-        r.i32()                 # depthMode — int32, NOT a byte
+        r.i32()                 # depthMode - int32, NOT a byte
         props = {}
         for _ in range(r.u32()):
             pn = r.s()
@@ -163,7 +163,7 @@ def load(path, geometry=True):
             r.f32(); r.f32()              # lodIn / lodOut
             # Only a plain MESH carries a bounding sphere and the isRenderable
             # byte. A SKINNED one ends at lodOut and the next node starts
-            # immediately — reading that byte anyway desyncs the whole rest of
+            # immediately - reading that byte anyway desyncs the whole rest of
             # the tree, which is why a third of the library "failed to parse":
             # every car with a skinned gear lever or steering column.
             if n.type == MESH:

@@ -1,6 +1,6 @@
 # assetto-corsa-gltf
 
-**Convert Assetto Corsa `.kn5` cars and tracks to glTF 2.0 or a single GLB — with the node hierarchy, liveries and PBR materials intact.**
+**Convert Assetto Corsa `.kn5` cars and tracks to glTF 2.0 or a single GLB - with the node hierarchy, liveries and PBR materials intact.**
 
 [![CI](https://github.com/semiloker/assetto-corsa-gltf/actions/workflows/ci.yml/badge.svg)](https://github.com/semiloker/assetto-corsa-gltf/actions/workflows/ci.yml)
 [![PyPI](https://img.shields.io/pypi/v/assetto-corsa-gltf.svg)](https://pypi.org/project/assetto-corsa-gltf/)
@@ -24,21 +24,21 @@ glb    : 12.0 MB
 wrote  : out/mx5.glb
 ```
 
-`out/mx5.glb` is the whole car — geometry, hierarchy and all 61 textures in one
+`out/mx5.glb` is the whole car - geometry, hierarchy and all 61 textures in one
 file. Drop it into Blender, three.js, Unity, Godot or any glTF viewer.
 
 <img src="assets/kn5-studio.png" width="820"
      alt="kn5-studio in a browser: a converted Mazda MX-5 ND in Soul Red on a dark grid, with the car's seven liveries listed down the left and a header reading 169 meshes, 168,283 triangles, 1.89 x 1.26 x 3.91 m.">
 
-<sub>`kn5-studio` — look at a car and click through its liveries before importing
+<sub>`kn5-studio` - look at a car and click through its liveries before importing
 it. Model: `ks_mazda_mx5_nd`, © Kunos Simulazioni. Shown to illustrate the tool;
 **no Assetto Corsa content is distributed with this project.**</sub>
 
 ## Why this one
 
 The point is the **node hierarchy**. A car's `.kn5` carries around 250 nodes with
-no geometry on them — wheel centres, suspension pickups, the steering column,
-door hinges — already named and already positioned. A track's mesh names carry
+no geometry on them - wheel centres, suspension pickups, the steering column,
+door hinges - already named and already positioned. A track's mesh names carry
 its physics surfaces in a prefix. A converter that flattens the tree throws all
 of that away and leaves a lump of triangles.
 
@@ -48,20 +48,20 @@ This one writes a glTF whose hierarchy matches the source one for one, so
 It also gets the things that are easy to get quietly wrong:
 
 - **Liveries.** An Assetto Corsa livery lives *outside* the model, and on most
-  Kunos road cars the body colour is not even in the diffuse — it is a flat
+  Kunos road cars the body colour is not even in the diffuse - it is a flat
   detail map the shader multiplies over a shared grey sheet. That is why naive
   imports arrive white. `--skin` resolves the paint the game would actually use.
 - **Runtime variants.** `*_BLUR`, `*_DAMAGE` and the low-resolution half of an
   in-file LOD pair are things the game swaps at runtime. Exported alongside the
   originals they z-fight and put opaque discs over the spokes, so they are
-  dropped — but `_LR` means *Left Rear* far more often than low-res, so the rule
+  dropped - but `_LR` means *Left Rear* far more often than low-res, so the rule
   tests for an `_HR` twin instead of matching the suffix.
 - **Materials.** Specular exponent *and intensity* become roughness;
   `fresnelMaxLevel` becomes `KHR_materials_specular`; car paint's second, much
   tighter sun lobe becomes `KHR_materials_clearcoat`, which is what makes paint
   read as paint rather than as moulded plastic.
 - **Encrypted models are refused**, not half-converted. The plain section of a
-  CSP-encrypted `.kn5` is decoys — 1×1 textures and 6 cm cubes.
+  CSP-encrypted `.kn5` is decoys - 1×1 textures and 6 cm cubes.
 
 Of the 219 entries in a stock `content/cars`, **215 convert, 2 are encrypted and
 refused, and none fail**.
@@ -79,7 +79,7 @@ Three commands land on your `PATH`:
 
 | Command | Does |
 |---|---|
-| `kn5-to-gltf` | the conversion — cars and tracks |
+| `kn5-to-gltf` | the conversion - cars and tracks |
 | `kn5-studio` | preview a car in a browser, and click through its liveries |
 | `kn5-survey` | scan a car library for modelled suspension geometry |
 
@@ -104,7 +104,7 @@ skin	02_artic_white	EXT_Carpaint	D5D2D0	23554	skin
 
 The first line of each livery is its bodywork.
 
-**A track** — several `.kn5` placed by a `models_*.ini` — plus its physics
+**A track** - several `.kn5` placed by a `models_*.ini` - plus its physics
 surfaces as a JSON sidecar:
 
 ```console
@@ -129,7 +129,7 @@ Every flag is in the **[CLI reference](https://semiloker.github.io/assetto-corsa
 | Input | | Read |
 |---|---|---|
 | `.kn5` | the model container, cars and tracks, versions 5 and 6 | yes |
-| `skins/<name>/` | liveries — DDS overriding the model's own textures | yes |
+| `skins/<name>/` | liveries - DDS overriding the model's own textures | yes |
 | `models_*.ini` | track layout: which models, where | yes |
 | `data/surfaces.ini` | physics surfaces, friction and grip | yes, as a sidecar |
 | `data.acd` | the encrypted physics archive | no |
@@ -144,7 +144,7 @@ Every flag is in the **[CLI reference](https://semiloker.github.io/assetto-corsa
 
 ## Limitations
 
-No animation and no skinning — skinned meshes arrive as static geometry in bind
+No animation and no skinning - skinned meshes arrive as static geometry in bind
 pose. No physics data beyond track surfaces. Track output is large: Magione is a
 165 MB buffer, with no decimation and no Draco. Materials are an approximation,
 because Assetto Corsa is a Blinn-Phong-era renderer; the conversions that exist
@@ -169,7 +169,7 @@ covers white cars, black cars, eight boxes, and models that arrive inside out.
 | [FAQ](https://semiloker.github.io/assetto-corsa-gltf/docs/faq/) | formats, encryption, licensing |
 | [Development](https://semiloker.github.io/assetto-corsa-gltf/docs/development/) | layout, tests, building the site |
 
-There are runnable [`examples/`](examples/) too — batch conversion, reading the
+There are runnable [`examples/`](examples/) too - batch conversion, reading the
 hierarchy back, and a minimal three.js page.
 
 ## Development
@@ -184,13 +184,13 @@ python -m flake8 src tests
 python scripts/build_site.py && python tests/test_site.py && node tests/test_search.js
 ```
 
-No Assetto Corsa install is needed — [`tests/test_convert.py`](tests/test_convert.py)
+No Assetto Corsa install is needed - [`tests/test_convert.py`](tests/test_convert.py)
 writes its own `.kn5` rather than checking someone else's car into the
 repository. See [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ## Licence
 
-MIT — see [LICENSE](LICENSE).
+MIT - see [LICENSE](LICENSE).
 
 three.js r160 (MIT) is vendored under `src/acgltf/viewer/three/` as a browser
 dependency of `kn5-studio`; nothing else in the package loads it.

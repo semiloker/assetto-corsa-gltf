@@ -1,6 +1,6 @@
 ---
 title: Limitations
-description: What the Assetto Corsa to glTF converter deliberately does not do — CSP encryption, animations, skinning, physics data, and where the material mapping is approximate.
+description: What the Assetto Corsa to glTF converter deliberately does not do - CSP encryption, animations, skinning, physics data, and where the material mapping is approximate.
 ---
 
 # Limitations
@@ -14,7 +14,7 @@ A `.kn5` carrying the Custom Shaders Patch trailer
 encrypted. What is left in the plain section is **decoys**: 1×1 PNGs where the
 textures should be, and 6 cm cubes where several meshes should be.
 
-So a converter that ignored the trailer would not fail — it would succeed, and
+So a converter that ignored the trailer would not fail - it would succeed, and
 hand back a car with boxes for wheels and no paint, and the failure would look
 like a bug in the converter. The tool stops with a message instead:
 
@@ -29,7 +29,7 @@ Decryption is not implemented and will not be. In a stock install this affects
 
 ## No skinning and no animation
 
-Skinned meshes are read for their **geometry** — their bone matrices are parsed
+Skinned meshes are read for their **geometry** - their bone matrices are parsed
 and discarded, and the mesh arrives in bind pose as static geometry. `.ksanim`
 files (doors, wings, wipers, the driver) are not read at all.
 
@@ -38,7 +38,7 @@ present and positioned. Rebuilding the motion is left to whoever wants it.
 
 ## No physics data
 
-`data.acd` — tyre models, suspension rates, gearing, aero, setup ranges — is
+`data.acd` - tyre models, suspension rates, gearing, aero, setup ranges - is
 Assetto Corsa's encrypted physics archive and is not touched.
 
 The exception is a track's surface table, which lives in a plain
@@ -49,7 +49,7 @@ The exception is a track's surface table, which lives in a plain
 
 Assetto Corsa is a Blinn-Phong-era renderer with per-material controls glTF has
 no slot for. Every conversion that exists is arithmetic with a stated
-derivation — see [Materials](output.md#materials) — but some things simply do
+derivation - see [Materials](output.md#materials) - but some things simply do
 not carry:
 
 - **`txMaps` green channel.** Documented as glossiness; on every map measured it
@@ -59,7 +59,7 @@ not carry:
   has no metallic workflow to map from, and inferring one from material names
   would be guessing.
 - **`ksAlphaRef` is often unusable.** 14 of Mulholland's materials set it to
-  0.0, and a glTF `MASK` at cutoff 0 passes every fragment — the whole texture
+  0.0, and a glTF `MASK` at cutoff 0 passes every fragment - the whole texture
   card renders opaque, fringe and all. Anything below 0.02 falls back to glTF's
   default 0.5.
 - **Multi-layer terrain shaders** are approximated by their base layer plus the
