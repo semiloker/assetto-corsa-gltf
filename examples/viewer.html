@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Converted car — three.js</title>
+<!--
+  The smallest honest three.js page for a converted car.
+
+      python -m http.server 8000          # from the folder holding this file
+      open http://localhost:8000/examples/viewer.html?model=../out/mx5.glb
+
+  A .glb needs nothing but this. A .gltf needs its .bin and PNGs served from the
+  same directory, which is the one real difference between the two containers.
+
+  Three settings matter and are the usual reason a converted car looks wrong:
+
+    * outputColorSpace = SRGBColorSpace, or everything renders washed out;
+    * a tone mapping other than None, or the specular highlights clip to white;
+    * an environment map, because a PBR material with nothing to reflect is
+      lit by the key light alone and metal and glass come out black. The one
+      here is generated in-process from a gradient, so the page needs no assets.
+
+  Loaded from a CDN because this is an example. kn5-studio vendors its own copy.
+-->
+<style>
+  html, body { margin: 0; height: 100%; background: #0e1013; color: #e8eaed;
+               font: 14px/1.5 system-ui, sans-serif; }
+  #hud { position: fixed; left: 12px; top: 12px; z-index: 2;
+         background: rgba(14, 16, 19, .82); padding: 10px 12px;
+         border: 1px solid #23272d; border-radius: 8px; max-width: 22rem; }
+  #hud b { color: #ff6a4d; }
+  #hud code { color: #a5abb4; }
+  canvas { display: block; }
+</style>
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+    "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+  }
+}
+</script>
+</head>
+<body>
+<div id="hud">loading…</div>
+<script type="module">
+import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
+
+const url = new URLSearchParams(location.search).get('model') || '../out/mx5.glb';
+const hud = document.getElementById('hud');
+
+const renderer = new THREE.WebGLRenderer({ antialias: true });
+renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+renderer.setSize(innerWidth, innerHeight);
+renderer.outputColorSpace = THREE.SRGBColorSpace;
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure = 1.1;
+document.body.appendChild(renderer.domElement);
+
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0x0e1013);
+
+// Something for the paint, the glass and the chrome to reflect.
+const pmrem = new THREE.PMREMGenerator(renderer);
+scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
+
+const key = new THREE.DirectionalLight(0xffffff, 2.2);
+key.position.set(4, 6, 3);
+scene.add(key);
+
+const camera = new THREE.PerspectiveCamera(38, innerWidth / innerHeight, 0.05, 500);
+const controls = new OrbitControls(camera, renderer.domElement);
+controls.enableDamping = true;
+
+new GLTFLoader().load(url, (gltf) => {
+  scene.add(gltf.scene);
+
+  // Frame whatever arrived, so this works for a 4 m car and a 2 km track.
+  const box = new THREE.Box3().setFromObject(gltf.scene);
+  const size = box.getSize(new THREE.Vector3());
+  const centre = box.getCenter(new THREE.Vector3());
+  const radius = size.length() / 2;
+  camera.position.copy(centre).add(
+    new THREE.Vector3(radius * 1.1, radius * 0.55, radius * 1.4));
+  camera.far = radius * 50;
+  camera.updateProjectionMatrix();
+  controls.target.copy(centre);
+
+  // The names come straight from the .kn5, which is the whole point of them.
+  const named = ['WHEEL_LF', 'WHEEL_RF', 'SUSP_LF', 'STEER_HR', 'COCKPIT_HR']
+    .filter((n) => gltf.scene.getObjectByName(n));
+  let meshes = 0;
+  gltf.scene.traverse((o) => { if (o.isMesh) meshes++; });
+
+  hud.innerHTML =
+    '<b>' + url.split('/').pop() + '</b><br>' +
+    meshes + ' meshes &middot; ' +
+    size.x.toFixed(2) + ' &times; ' + size.y.toFixed(2) + ' &times; ' +
+    size.z.toFixed(2) + ' m<br>' +
+    (named.length
+      ? 'found by name: <code>' + named.join('</code>, <code>') + '</code>'
+      : 'no car nodes found — a track?') +
+    '<br><br>drag to turn &middot; wheel to zoom';
+}, undefined, (err) => {
+  hud.innerHTML = '<b>could not load</b><br><code>' + url + '</code><br><br>' +
+    'Convert a car first:<br><code>kn5-to-gltf car.kn5 out --name mx5 --glb</code>' +
+    '<br><br>' + err;
+});
+
+addEventListener('resize', () => {
+  camera.aspect = innerWidth / innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(innerWidth, innerHeight);
+});
+
+renderer.setAnimationLoop(() => {
+  controls.update();
+  renderer.render(scene, camera);
+});
+</script>
+</body>
+</html>
