@@ -1,0 +1,91 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    name: Python ${{ matrix.python }} on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest]
+        python: ['3.9', '3.10', '3.11', '3.12', '3.13']
+        include:
+          # The converter is used mostly on Windows, where Assetto Corsa is, and
+          # macOS is where a case-sensitive-filesystem assumption would show up.
+          - os: windows-latest
+            python: '3.12'
+          - os: macos-latest
+            python: '3.12'
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+
+      - name: Install
+        run: pip install -e ".[docs]" flake8
+
+      - name: Lint
+        run: python -m flake8 src tests scripts examples
+
+      - name: The converter, end to end
+        run: python tests/test_convert.py
+
+      - name: The LOD-twin rule
+        run: python tests/test_lod.py
+
+      - name: Where the paint comes from
+        run: python tests/test_paint.py
+
+      - name: The preview server
+        run: python tests/test_studio.py
+
+      - name: The command line answers
+        run: |
+          kn5-to-gltf --version
+          kn5-studio --version
+          kn5-survey --version
+          python -m acgltf.convert --help > /dev/null
+        shell: bash
+
+  site:
+    name: Website and search
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install
+        run: pip install -e ".[docs]"
+
+      # The build fails on a broken internal link or a missing anchor, so this
+      # step is itself the link check.
+      - name: Build
+        run: python scripts/build_site.py
+
+      - name: Links, metadata, sitemap and robots
+        run: python tests/test_site.py
+
+      - name: Search, against the index that was just built
+        run: node tests/test_search.js
